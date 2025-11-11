@@ -1,0 +1,17 @@
+stages:
+  - test
+
+run_python_script:
+  stage: test
+  image: python:3.13
+  before_script:
+    - python --version
+    - pip install --upgrade pip
+    - pip install -r requests || echo "Error to install requests"
+  script:
+    - echo "Running Python script..."
+    - python check_url.py "https://carlosmagnoti.com.br"
+  artifacts:
+    paths:
+      - output.log
+    expire_in: 1 week
