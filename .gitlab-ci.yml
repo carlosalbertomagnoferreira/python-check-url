@@ -4,6 +4,7 @@ stages:
 run_python_script:
   stage: test
   image: python:3.13
+  when: manual
   before_script:
     - python --version
     - pip install --upgrade pip
@@ -11,7 +12,3 @@ run_python_script:
   script:
     - echo "Running Python script..."
     - python check_url.py "https://carlosmagnoti.com.br"
-  artifacts:
-    paths:
-      - output.log
-    expire_in: 1 week
