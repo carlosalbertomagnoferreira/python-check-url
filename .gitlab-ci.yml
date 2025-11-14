@@ -1,8 +1,8 @@
 stages:
-  - test
+  - check-url
 
 run_python_script:
-  stage: test
+  stage: check-url
   image: python:3.13
   when: manual
   before_script:
@@ -12,3 +12,5 @@ run_python_script:
   script:
     - echo "Running Python script..."
     - python check_url.py "https://carlosmagnoti.com.br"
+  only:
+    - tags
