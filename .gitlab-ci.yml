@@ -1,0 +1,16 @@
+stages:
+  - check-url
+
+run_python_script:
+  stage: check-url
+  image: python:3.13
+  when: manual
+  before_script:
+    - python --version
+    - pip install --upgrade pip
+    - pip install requests || echo "Error to install requests"
+  script:
+    - echo "Running Python script..."
+    - python check_url.py "https://carlosmagnoti.com.br"
+  only:
+    - tags
