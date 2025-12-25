@@ -3,7 +3,7 @@ stages:
 
 run_python_script:
   stage: check-url
-  image: python:3.13
+  image: python:3.13.11-alpine3.23
   when: manual
   before_script:
     - python --version
