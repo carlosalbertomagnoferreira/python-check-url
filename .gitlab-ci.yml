@@ -1,6 +1,9 @@
 stages:
   - check-url
 
+variables:
+  url: "https://carlosmagnoti.com.br"
+
 run_python_script:
   stage: check-url
   image: python:3.13.11-alpine3.23
@@ -11,6 +14,4 @@ run_python_script:
     - pip install requests || echo "Error to install requests"
   script:
     - echo "Running Python script..."
-    - python check_url.py "https://carlosmagnoti.com.br"
-  only:
-    - tags
+    - python check_url.py $url
