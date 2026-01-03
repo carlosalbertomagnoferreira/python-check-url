@@ -1,5 +1,7 @@
 # python-check-url ✅
 
+[![Check URL](https://github.com/carlosalbertomagnoferreira/python-check-url/actions/workflows/check-url.yml/badge.svg)](https://github.com/carlosalbertomagnoferreira/python-check-url/actions/workflows/check-url.yml)
+
 **Verifica rapidamente o status HTTP de uma URL via CLI.**
 
 
@@ -13,7 +15,7 @@
 
 ## 🧩 Requisitos
 
-- Python 3.8+
+- Python 3.13+
 - Dependência: `requests`
 
 Instale a dependência manualmente:
@@ -48,7 +50,9 @@ Erro - Status Code 404: Not Found
 
 ---
 
-## 🧪 Integração com CI (GitLab)
+## 🧪 Integração com CI
+
+### GitLab (exemplo)
 
 O repositório já contém um exemplo de job no arquivo `.gitlab-ci.yml` que executa o script manualmente:
 
@@ -62,6 +66,15 @@ run_python_script:
 ```
 
 Basta definir a variável `url` no pipeline (ou no job) para que o job rode.
+
+### GitHub Actions (disponível)
+
+Também existe um workflow para GitHub Actions em `.github/workflows/check-url.yml` com acionamento manual (`workflow_dispatch`) que recebe um input `url`. Para executar:
+
+- Pela interface: acesse a aba **Actions**, selecione **Check URL** e clique em **Run workflow**; informe `url` e confirme.
+- Pela CLI (opcional): `gh workflow run check-url.yml -f url=https://example.com`
+
+O workflow usa a mesma imagem `python:3.13.11-alpine3.23`, instala `requests` e executa `python check_url.py $url`.
 
 ---
 
