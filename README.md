@@ -16,37 +16,92 @@
 ## 🧩 Requisitos
 
 - Python 3.13+
-- Dependência: `requests`
+- Gerenciador de dependências: `uv`
 
-Instale a dependência manualmente:
+### Instalação do UV
+
+O `uv` é um gerenciador de pacotes Python rápido e moderno. Instale-o com:
 
 ```bash
-pip install requests
+pip install uv
 ```
 
-> Observação: o script atual desabilita verificações de certificado (`verify=False`) para permitir checagens em ambientes com certificados autoassinados.
+> Observação: o script atual desabilita verificações de certificado (`verify=ssl=False`) para permitir checagens em ambientes com certificados autoassinados.
 
 ---
 
 ## ⚙️ Como usar
 
-Executar diretamente com Python passando a URL como argumento:
+### Configuração inicial
+
+Antes de usar o script, sincronize as dependências com:
 
 ```bash
-python check_url.py https://example.com
+uv sync
 ```
 
-Exemplo de saída esperada:
+### Executando o script
 
-- Em caso de sucesso (2xx/3xx):
+Execute o `main.py` passando a URL como argumento:
+
+```bash
+uv run python main.py https://example.com
 ```
-Site - https://example.com: OK
+
+### Opções disponíveis
+
+```bash
+uv run python main.py <url> [--timeout SEGUNDOS] [--insecure] [--verbose]
 ```
-- Em caso de erro (ex.: 404, 500):
+
+**Argumentos:**
+- `<url>` (obrigatório): URL a ser verificada
+- `--timeout SEGUNDOS` (opcional): Tempo máximo de espera em segundos (default: 5)
+- `--insecure` (opcional): Desabilita validação de certificado SSL/TLS
+- `--verbose` (opcional): Ativa modo verbose com mensagens de debug
+
+### Exemplos
+
+Verificação simples:
+```bash
+uv run python main.py https://example.com
 ```
-Erro - Status Code 404: Not Found
+
+Com timeout customizado:
+```bash
+uv run python main.py https://example.com --timeout 10
 ```
-- Em caso de parâmetro inválido ou ausência de argumento, o script imprime uma mensagem de erro.
+
+Ignorando validação SSL:
+```bash
+uv run python main.py https://example.com --insecure
+```
+
+Com verbose:
+```bash
+uv run python main.py https://example.com --verbose
+```
+
+### Saída esperada
+
+- **Sucesso (2xx/3xx):**
+```
+2026-01-17 10:30:45,123 - INFO - Site https://example.com está acessível (200 OK)
+```
+
+- **Erro (4xx/5xx):**
+```
+2026-01-17 10:30:45,123 - WARNING - Site https://example.com retornou status 404 (Not Found)
+```
+
+- **Falha de conexão:**
+```
+2026-01-17 10:30:45,123 - ERROR - Erro de conexão ao acessar https://example.com
+```
+
+**Código de saída:**
+- `0`: URL acessível (2xx ou 3xx)
+- `1`: URL inacessível ou erro na requisição
 
 ---
 
@@ -61,8 +116,13 @@ run_python_script:
   stage: check-url
   image: python:3.13.11-alpine3.23
   when: manual
+  before_script:
+    - python --version
+    - pip install uv
+    - uv sync
   script:
-    - python check_url.py $url
+    - echo "Running Python script..."
+    - uv run python main.py $url
 ```
 
 Basta definir a variável `url` no pipeline (ou no job) para que o job rode.
@@ -74,13 +134,7 @@ Também existe um workflow para GitHub Actions em `.github/workflows/check-url.y
 - Pela interface: acesse a aba **Actions**, selecione **Check URL** e clique em **Run workflow**; informe `url` e confirme.
 - Pela CLI (opcional): `gh workflow run check-url.yml -f url=https://example.com`
 
-O workflow usa a mesma imagem `python:3.13.11-alpine3.23`, instala `requests` e executa `python check_url.py $url`.
-
----
-
-## 🔒 Segurança e melhorias
-
-- Atualmente as requisições ignoram validação TLS; considere ativar `verify` em ambientes de produção.
+O workflow usa a mesma imagem `python:3.13.11-alpine3.23`, instala `uv`, sincroniza as dependências e executa `uv run python main.py $url`.
 
 ---
 

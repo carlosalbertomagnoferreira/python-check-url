@@ -20,12 +20,11 @@ jobs:
       - name: Show Python version
         run: python --version
 
-      - name: Upgrade pip
-        run: pip install --upgrade pip
+      - name: Install UV
+        run: pip install uv
 
-      - name: Install dependencies
-        run: |
-          pip install requests || echo "Error to install requests"
+      - name: Sync dependencies
+        run: uv sync
 
       - name: Run check script
-        run: python check_url.py ${{ github.event.inputs.url }}
+        run: uv run python main.py ${{ github.event.inputs.url }}

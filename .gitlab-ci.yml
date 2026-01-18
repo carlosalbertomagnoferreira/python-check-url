@@ -10,8 +10,8 @@ run_python_script:
   when: manual
   before_script:
     - python --version
-    - pip install --upgrade pip
-    - pip install requests || echo "Error to install requests"
+    - pip install uv
+    - uv sync
   script:
     - echo "Running Python script..."
-    - python check_url.py $url
+    - uv run python main.py $url
