@@ -22,9 +22,13 @@
 
 O `uv` é um gerenciador de pacotes Python rápido e moderno. Instale-o com:
 
-```bash
+``` bash
 pip install uv
 ```
+``` bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
 
 > Observação: o script atual desabilita verificações de certificado (`verify=ssl=False`) para permitir checagens em ambientes com certificados autoassinados.
 
