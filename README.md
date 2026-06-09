@@ -111,7 +111,7 @@ uv run python main.py https://example.com --verbose
 
 ## 🧪 Integração com CI
 
-### GitLab (exemplo)
+### GitLab
 
 O repositório já contém um exemplo de job no arquivo `.gitlab-ci.yml` que executa o script manualmente:
 
@@ -131,9 +131,42 @@ run_python_script:
 
 Basta definir a variável `url` no pipeline (ou no job) para que o job rode.
 
-### GitHub Actions (disponível)
+### GitHub Actions
 
 Também existe um workflow para GitHub Actions em `.github/workflows/check-url.yml` com acionamento manual (`workflow_dispatch`) que recebe um input `url`. Para executar:
+
+``` yaml
+name: Check URL
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL a ser verificada'
+        required: true
+        default: 'https://carlosmagnoti.com.br'
+
+jobs:
+  check-url:
+    name: Check URL
+    runs-on: ubuntu-latest
+    # container: python:3.13.11-alpine3.23
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show Python version
+        run: python --version
+
+      - name: Install UV
+        run: pip install uv
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Run check script
+        run: uv run python main.py ${{ github.event.inputs.url }}
+```
 
 - Pela interface: acesse a aba **Actions**, selecione **Check URL** e clique em **Run workflow**; informe `url` e confirme.
 - Pela CLI (opcional): `gh workflow run check-url.yml -f url=https://example.com`
